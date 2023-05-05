@@ -1,0 +1,161 @@
+Crie um programa em C que apresente o menu de opções abaixo, possibilitando ao usuário realizar as seguintes operações sobreuma lista duplamente encadeada
+formada por números reais:
+i. Inserir elemento no início da lista
+ii. Remover do início da lista
+iii. Exibir os elementos da lista na ordeminversaiv. Exibir a soma de todos os elementos da lista
+Obs1: todas as funções devem usar a notação de ponteiroparaponteiro, exceto as funções de exibir.
+
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+typedef struct sNo
+{
+    float numeros;
+    struct sNo *dir;
+    struct sNo *esq;
+}No;
+
+void inicializar(No** plista){
+    (*plista) = NULL;
+}
+
+No* alocarNo(){
+    No* aux;
+    aux = (No*)malloc(sizeof(No));
+}
+
+No* desalocarNo(No* novo){
+    free(novo);
+}
+
+int listaVazia(No* plista){
+    if(plista == NULL){
+        return 1;
+    }else{
+        return 0;
+    }
+}
+
+void inserirNoInicio(No** plista, int elem){
+    No* pNovo;
+    pNovo = alocarNo();
+    if(pNovo != NULL){
+        (*pNovo).numeros = elem;
+        (*pNovo).dir = (*plista);
+        (*pNovo).esq = NULL;
+        if((*plista)!=NULL){
+            (**plista).esq = pNovo;
+        }
+        (*plista) = pNovo;
+    }else{
+        printf("Nao foi posivel iserir:\n");
+    }
+}
+
+void removerInicio(No** plista){
+    if(listaVazia((*plista))){
+        printf("Lista vazia!\n");
+    }else{
+        No* aux;
+        aux = (*plista);
+        (*plista) = (*aux).dir;
+        (**plista).esq = NULL;
+        desalocarNo(aux);
+    }
+}
+
+void imprimirLista(No* plista){
+    No* aux = plista;
+    printf("A lista eh:\n");
+    while (aux != NULL)
+    {
+        printf("%.2f", (*aux).numeros);
+        aux = (*aux).dir;
+    }  
+}
+
+void inverterElementos(No** plista){
+    No* esq = NULL;
+    No* aux = *plista;
+    No* dir = NULL;
+
+    while (aux != NULL)
+    {
+        dir = aux->dir;
+        aux->dir = esq;
+        esq = aux;
+        aux = dir; 
+    }
+    *plista = esq;
+}
+
+int somarElementos(No* plista){
+    float soma = 0;
+    No* aux = plista;
+    while (aux != NULL)
+    {
+        soma+=(*aux).numeros;
+        aux = (*aux).dir;
+    }
+    printf("A soma dos elementos eh: %.2f\n", soma);
+}
+
+int main(){
+
+    No* plista;
+    int opcao;
+    float elemento;
+
+    do
+    {
+        printf("Escolha uma opcao:\n");
+        printf("1 - Inicializar lista:\n");
+        printf("2 - Inserir um elemento na lista:\n");
+        printf("3 - Remover do inicio da lista:\n");
+        printf("4 - Imprimir a lista:\n");
+        printf("5 - Exibir em ordem inversa:\n");
+        printf("6 - Soma dos elementos:\n");
+        printf("0 - Para sair\n");
+        scanf("%d", &opcao);
+
+        switch (opcao)
+        {
+        case 1:
+            inicializar(&plista);
+            break;
+        case 2:
+            printf("Digite o elemento que deseja inserir:\n");
+            scanf("%f", &elemento);
+            inserirNoInicio(&plista, elemento);
+            break;
+        case 3:
+            removerInicio(&plista);
+            break;
+        case 4:
+            imprimirLista(plista);
+            break;
+        case 5:
+            printf("Lista: \n");
+            imprimirLista(plista);
+            inverterElementos(&plista);
+            printf("Lista invertida: \n");
+            imprimirLista(plista);
+            break;
+        case 6:
+            somarElementos(plista);
+            break;
+        case 0:
+            printf("Saindo do programa:\n");
+            break;
+        default:
+            printf("Opcao invalida!\n");
+            break;
+        }
+
+
+    } while (opcao != 0);
+    
+    return 0;
+}
