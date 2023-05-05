@@ -1,6 +1,7 @@
 Crie um programa emC que apresenteomenudeopções abaixo, possibilitando aousuáriorealizarasseguintes operações sobre umalistasimplesmenteencadeada formada por caracteres:
 i. Inserir elemento no final da lista
-ii. Remover elemento do início da listaiii.Imprimir todos os elementos da lista
+ii. Remover elemento do início da lista
+iii.Imprimir todos os elementos da lista
 
 
 #include <stdio.h>
