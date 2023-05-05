@@ -1,0 +1,89 @@
+Crie um programa em C que apresenteomenudeopções abaixo, possibilitando ao usuáriorealizarasseguintes operações sobre uma lista linear estáticadetamanho 20 formada por números reais:
+i. Inicializar lista
+ii. Inserir elemento no final da lista
+iii. Imprimir os elementos da lista
+
+#include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
+#define TAML 20
+
+typedef struct sLista
+{
+    float num[TAML];
+    int n;
+}Lista;
+
+void inicialiar_lista(Lista *pl){
+    (*pl).n = -1;
+}
+
+void liberar_lista(Lista *pl){
+    free(pl);
+}
+
+int lista_cheia(Lista *pl){
+    if(pl->n+1 == TAML){
+        return 1;
+    }else{
+        return 0;
+    }
+}
+
+int inserirNo_fim (Lista *pl, float elemento){
+    if(lista_cheia(pl)){
+        printf("Erro --- Lista Cheia!");
+            return 1;
+
+        }else{
+            (*pl).num[(*pl).n+1] = elemento;
+            (*pl).n++;
+        }
+        return 0;
+    }
+
+void receber_dados (Lista *pl){
+
+    float elemento;
+    char resp[2];
+
+    do
+    {
+        printf("Digite um numero:\n");
+        scanf("%f", &elemento);
+        inserirNo_fim(pl,elemento);
+        fflush(stdin);
+
+        printf("Deseja inserir outro numero: S ou N:\n");
+        scanf("%c", resp);
+        fflush(stdin);
+
+
+    } while (resp[0] == 'S' || resp[0] == 's');
+    
+
+
+}
+
+void imprimir_lista(Lista *pl){
+    for(int i = 0; i <= (*pl).n; i++){
+        printf("%.2f\n", (pl)->num[i]);
+    }
+}
+
+
+int main(){
+
+    Lista *L;
+    L = (Lista*)malloc(sizeof(Lista));
+
+    if (L != NULL){
+        inicialiar_lista(L);
+        receber_dados(L);
+        imprimir_lista(L);
+        liberar_lista(L);
+        
+    }
+
+    return 0;
+}
