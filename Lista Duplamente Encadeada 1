@@ -1,0 +1,151 @@
+Crie um programa emC que apresenteomenudeopções abaixo, possibilitado ao usuáriorealizarasseguintes operações sobre uma listaduplamenteencadeada usada na implementaçãodocontroleremoto de uma TV contendo o nomeeonúmerodo canal. 
+Ø Inserir novo canal no final da lista
+Ø Exibir os canais da lista
+Ø Remover um canal específico dalista
+
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+typedef struct sControle {
+    char nomeCanal[20];
+    int num;
+} Controle;
+
+typedef struct sNo {
+    Controle Canal;
+    struct sNo* esq;
+    struct sNo* dir;
+} No;
+
+void inicializarLista(No** pplista) {
+    pplista = NULL;
+}
+
+No* alocarNo() {
+    No* aux;
+    aux = (No*)malloc(sizeof(No));
+    return aux;
+}
+
+int listaVazia(No** pplista) {
+    if (*pplista == NULL) {
+        return 1;
+    } else {
+        return 0;
+    }
+}
+
+void inserirFim(No** pplista, char nomeCanal[], int num) {
+    No* Novo;
+    Novo = alocarNo();
+    if (Novo == NULL) {
+        printf("Nao foi possivel alocar.\n");
+    } else {
+        strcpy(Novo->Canal.nomeCanal, nomeCanal);
+        Novo->Canal.num = num;
+        Novo->esq = NULL;
+        Novo->dir = NULL;
+        if (listaVazia(pplista)) {
+            *pplista = Novo;
+        } else {
+            No* aux;
+            aux = *pplista;
+            while (aux->dir != NULL) {
+                aux = aux->dir;
+            }
+            aux->dir = Novo;
+            Novo->esq = aux;
+        }
+    }
+}
+
+void exibirCanal(No** pplista) {
+    if (*pplista == NULL) {
+        printf("Lista vazia.\n");
+    } else {
+        No* aux;
+        aux = *pplista;
+        printf("Canais:\n");
+        while (aux != NULL) {
+            printf("%s - %d\n", aux->Canal.nomeCanal, aux->Canal.num);
+            aux = aux->dir;
+        }
+    }
+}
+
+void removerCanal(No** pplista, int num) {
+    No* DeletarNo = *pplista;
+    while (DeletarNo != NULL && DeletarNo->Canal.num != num) {
+        DeletarNo = DeletarNo->dir;
+    }
+    if (DeletarNo == NULL) {
+        printf("Canal %d nao encontrado.\n", num);
+    } else {
+        if (DeletarNo->esq == NULL) {
+            *pplista = DeletarNo->dir;
+        } else {
+            DeletarNo->esq->dir = DeletarNo->dir;
+        }
+        if (DeletarNo->dir != NULL) {
+            DeletarNo->dir->esq = DeletarNo->esq;
+        }
+        printf("Canal %d - %s removido.\n", DeletarNo->Canal.num, DeletarNo->Canal.nomeCanal);
+        free(DeletarNo);
+    }
+}
+
+int main(){
+
+    No** pplista;
+    pplista = NULL;
+    char nome[20];
+    int opcao, num;
+
+    do
+    {
+        printf("Escolha uma opcao:\n");
+        printf("1 - Inicializar Funcao:\n");
+        printf("2 - Inserir novo canal na lista:\n");
+        printf("3 - Exibir canais da lista:\n");
+        printf("4 - Remover canal da lista:\n");
+        printf("5 - Sair:\n");
+        scanf("%d", &opcao);
+
+        switch (opcao)
+        {
+        case 1:
+            iniciliarLista(pplista);
+            break;
+        case 2:
+            fflush(stdin);
+            printf("Digite o nome do canal:\n");
+            gets(nome);
+            fflush(stdin);
+            printf("Digite o numero do canal:\n");
+            scanf("%d", &num);
+            iniciliarLista(&pplista, nome, num);
+            break;
+        case 3:
+            exibirCanal(pplista);
+            break;
+        case 4:
+            printf("Digite o numero do canal que deseja remover:\n");
+            scanf("%d", &num);
+            removerCanal(pplista, num);
+            break;
+        case 5:
+            printf("Saindo\n");
+            break;
+        default:
+            printf("Opcao invalida!\n");
+            break;
+        }
+    } while (opcao != 5);
+    
+
+
+
+    return 0;
+}
