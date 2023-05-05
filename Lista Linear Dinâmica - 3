@@ -1,0 +1,100 @@
+Desenvolva uma função na linguagem C para inverter a ordemdoselementos de uma lista simplesmente encadeada formadaporinteiros (o primeiro passa a ser o último, o segundo passaaser openúltimo, etc). 
+Dica: utilize ponteiros auxiliares.
+
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+typedef struct sInteiros
+{
+    int num;
+}Inteiros;
+
+typedef struct sNo{
+    Inteiros info;
+    struct sNo *prox;
+}No;
+
+No* inicializar_lista(No* plista){
+    plista = NULL;
+    return plista;
+}
+
+int listaVazia(No* plista){
+    if(plista == NULL){
+        printf("Lista vazia!\n");
+        return 1;
+    }else{
+        return 0;
+    }
+}
+
+No* alocarNo(){
+    No* aux;
+    aux = (No*)malloc(sizeof(No));
+    return aux;
+}
+
+void desalocarNo(No* pNo){
+    free(pNo);
+}
+
+No* inserirInicio(No* plista, int num){
+    No* pNovo;
+    pNovo = alocarNo();
+    if(pNovo != NULL){
+        pNovo->info.num = num;
+        pNovo->prox = plista;
+        plista = pNovo;
+        return plista;
+    }
+    return NULL;
+}
+
+void imprimirLista(No* plista){
+    No* aux = plista;
+    while(aux != NULL){
+        printf("%d ", aux->info.num);
+        aux = aux->prox;
+    }
+    printf("\n");
+}
+
+void inverterLista(No** plista){
+    No* ant = NULL;
+    No* aux = *plista;  
+    No* prox = NULL;
+    while (aux != NULL)
+    {
+        prox = aux->prox;
+        aux->prox = ant;
+        ant = aux;
+        aux = prox;
+    }
+    *plista = ant;
+}
+
+int main(){
+    No* plista = NULL;
+    plista = inicializar_lista(plista);
+    int num_elem, elem;
+
+    printf("Digite o numero de elementos da lista\n");
+    scanf("%d", &num_elem);
+
+    printf("Digite os elemetos da lista:\n");
+    for(int i = 0; i < num_elem; i++){
+        scanf("%d", &elem);
+        plista = inserirInicio(plista, elem);
+    }
+
+    printf("Lista original: ");
+    imprimirLista(plista);
+    inverterLista(&plista);
+    printf("Lista invertida: ");
+    imprimirLista(plista);
+
+
+    return 0;
+}
