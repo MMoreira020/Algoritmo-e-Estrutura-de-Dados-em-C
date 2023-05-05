@@ -1,0 +1,73 @@
+Crie um programa em C para manipular umaplaylistdemúsicas do Spotify usando TAD. Oprogramadevesercapaz de armazenar até 100 músicas . Asmúsicasdevem ser inseridas sempre no iníciodalista.Emseguida, imprima a lista de músicas na tela. • Os dados a serem armazenados são:
+ü Nome da música
+ü Duração
+
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#define TAML 100
+
+typedef struct sSpotify {
+    char music[20];
+    int duracao; 
+    struct sSpotify *prox; 
+}Spotify;
+
+typedef struct sLista {
+    Spotify faixas[TAML]; 
+    int n;
+}Lista;
+
+void inicializa_lista(Lista *pl) {
+    (*pl).n = -1;
+}
+
+int lista_cheia(Lista *pl) {
+    if (pl->n+1 == TAML) { 
+        printf("Erro --- Lista cheia!\n");
+        return 1;
+    }else {
+        return 0;
+    }
+}
+
+void inserir_musica(Lista *pl){
+    if (lista_cheia(pl) == 0){
+        pl->n = pl->n+1;
+
+    for(int i = pl->n+1; i >= 0; i--){
+    pl->faixas[i] = pl-> faixas[i-1];
+        printf("Digite o nome da musica:\n");
+        gets(pl->faixas[0].music);
+        fflush(stdin);
+        printf("Digite o tempo de duracao da musica:\n");
+        printf("Minutos: \n");
+        scanf("%d", &pl->faixas[0].duracao);
+        getchar();
+
+    }
+    }
+}
+
+void imprimir_playlist(Lista *pl) {
+    Spotify *atual = pl->faixas;
+    while (atual != NULL) {
+        printf("%s - %d segundos\n", atual->music, atual->duracao);
+        atual = atual->prox;
+    }
+}
+
+int main() {
+    Lista *pL;
+
+    char music[20];
+    int duracao;
+    
+    inicializa_lista(pL);
+    inserir_musica(pL);
+    imprimir_playlist(pL);
+
+
+    return 0;
+}
