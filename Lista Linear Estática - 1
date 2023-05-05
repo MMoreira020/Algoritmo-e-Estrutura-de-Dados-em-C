@@ -1,0 +1,168 @@
+Crie um programa em C que apresente o menu de opções abaixo, possibilitando ao usuário realizar as seguintes operações sobreumalista linear estática de tamanho 50 formada por números inteiros:
+i. Inicializar lista
+ii. Inserir elemento no final da lista
+iii. Inserir elemento na posição de índice k
+iv. Remover elemento da posição de índice K
+v. Modificar elemento da posição de índice K
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#define TAML 50
+
+typedef struct sInteiros
+{
+    int num;
+}Inteiros;
+
+typedef struct sLista
+{
+    Inteiros dado[TAML];
+    int n;
+}Lista;
+
+void inicializarLista(Lista *ptrl){
+    (*ptrl).n = -1;
+}
+
+int listaCheia(Lista *ptrl){
+    if((*ptrl).n+1 == TAML){
+        printf("Lista cheia!\n");
+        return 1;
+    }else{
+        return 0;
+    }
+}
+
+int listaVazia(Lista* ptrl){
+    if((*ptrl).n == -1){
+        printf("Lista vazia!\n");
+        return 1;
+    }else{
+        return 0;
+    }
+}
+
+int inserirNoFinal(Lista* ptrl, int valor){
+    if(listaCheia(ptrl)){
+        return 1;
+    }else{
+        (*ptrl).n++;
+        (*ptrl).dado[(*ptrl).n].num = valor;
+    }
+}
+
+int inserirPosK(Lista* ptrl, int k, int valor){
+    if(listaCheia(ptrl)){
+        return 1;
+    }
+    if((k < 0)||(k > (*ptrl).n+1)){
+        return 1;
+    }else{
+        for(int i = (*ptrl).n+1; i > k; i--){
+            (*ptrl).dado[i] = (*ptrl).dado[i - 1];
+        }
+        (*ptrl).dado[k].num = valor;
+        (*ptrl).n++;
+        return 0;
+    }
+}
+
+int removerElementoK(Lista* ptrl, int k){
+    if(listaVazia(ptrl)){
+        return 1;
+    }
+    if((k < 0)||(k > (*ptrl).n)){
+        printf("Posicao invalida!\n");
+        return 1;
+    }
+        for(int i = k; i < (*ptrl).n; i++){
+        (*ptrl).dado[i] = (*ptrl).dado[i + 1];
+    }
+    (*ptrl).n--;
+    return 0;
+}
+
+int modificarElemento(Lista* ptrl, int k, int valor){
+    if(listaVazia(ptrl)){
+        return 1;
+    }
+    if((k < 0)||(k > (*ptrl).n+1)){
+        return 1;
+    }
+    for(int i = (*ptrl).n+1; i > k; i++){
+        (*ptrl).dado[i] = (*ptrl).dado[i - 1];
+    }
+    (*ptrl).dado[k].num = valor;
+}
+
+void imprimir(Lista* ptrl){
+    printf("Lista:\n");
+    for(int i = 0; i < (*ptrl).n+1; i++){
+        printf("%d\n", (*ptrl).dado[i].num);
+    }
+}
+
+int main(){
+
+    Lista* ptrl;
+    int opcao, valor, pos;
+
+    do
+    {
+        printf("Informe uma opcao:\n");
+        printf("1 - Inicializar lista:\n");
+        printf("2 - Inserir final da lista:\n");
+        printf("3 - Inserir elemento na posicao K:\n");
+        printf("4 - Remover elemento da pos K:\n");
+        printf("5 - Modificr elemento da pos K:\n");
+        printf("6 - Imprimir lista:\n");
+        printf("0 - Sair:\n");
+        scanf("%d", &opcao);
+
+        switch (opcao)
+        {
+        case 1:
+            inicializarLista(ptrl);
+            break;
+        case 2:
+            printf("Digite o elemeto a ser inserido:\n");
+            scanf("%d", &valor);
+            inserirNoFinal(ptrl, valor);
+            break;
+        case 3:
+            printf("Digite a posicao que deseja inserir:\n");
+            scanf("%d", &pos);
+            printf("Digite o valor que deseja inserir:\n");
+            scanf("%d", &valor);
+            inserirPosK(ptrl, pos, valor);
+            break;
+        case 4:
+            printf("Digite o elemento que deseja remover:\n");
+            scanf("%d", &valor);
+            removerElementoK(ptrl, valor);
+            break;
+        case 5:
+            printf("Diigte o elemento que deseja modificar:\n");
+            scanf("%d", &valor);
+            printf("Digite a posicao do elemento:\n");
+            scanf("%d", &pos);
+            modificarElemento(ptrl, valor, pos);
+            break;
+        case 6:
+            imprimir(ptrl);
+            break;
+        case 0:
+            printf("Saindo...\n");
+            break;
+        default:
+            printf("Opcao invalida!\n");
+            break;
+        }
+    } while (opcao!=0);
+    
+
+
+
+    return 0;
+}
