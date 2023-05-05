@@ -1,0 +1,165 @@
+Crie um programa em C que ajude o professor de SIN211nolançamento das notas para as atividades das aulas práticasdadisciplina usando TAD. O programa deve armazenar os dados de45alunos matriculados na disciplina (nome, matrícula, notasdasatividades das aulas práticas). Vale ressaltar que os dados referentesàs notas das aulas práticas deverão ser capazes de armazenar 10valores (um ponto para cada semana). Em seguida, crie uma aplicaçãoque apresente o menu de opções abaixo:
+a. Cadastrar aluno (a função deve inserir sempre no iníciodalista)
+b. Pesquisar aluno pela matrícula (a função deve retornar aposição do aluno na lista)
+c. Remover aluno (a função deve remover sempre dofinal dalista)
+d. Calcular e exibir a nota final das atividades nas aulas práticasde cada aluno cadastrado (lembrando que nota final nãopode ultrapassar 10 pts)
+
+#include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
+#define TAML 45
+#define TAML_NOTAS 10
+
+typedef struct sALuno
+{
+    char nome[50];
+    int mat;
+    float notas[TAML_NOTAS];
+}Aluno;
+
+typedef struct sLIsta
+{
+    Aluno alunos[TAML];
+    int n;
+}Lista;
+
+void inicalizarLista(Lista* ptrl){
+    (*ptrl).n = -1;
+}
+
+int listaCheia(Lista *ptrl){
+    if((*ptrl).n+1 == TAML){
+        printf("Lista cheia!\n");
+        return 1;
+    }else{
+        return 0;
+    }
+}
+
+int listaVazia(Lista *ptrl){
+    if((*ptrl).n == -1){
+        printf ("Lista vazia!\n");
+        return 1;
+    }else{
+        return 0;
+    }
+}
+
+int inserirAluno(Lista *ptrl, Aluno a){
+    if(listaCheia(ptrl)){
+        printf("Lista cheia!\n");
+        return 1;
+    }else{
+            for(int i = (*ptrl).n+1; i > 0; i--){
+                (*ptrl).alunos[i] = (*ptrl).alunos[i - 1];
+            }
+        fflush(stdin);
+        printf("Digite o nome do aluno:\n");
+        gets(a.nome);
+        fflush(stdin);
+        printf("Digite a matricula do aluno:\n");
+        scanf("%d", &a.mat);
+        fflush(stdin);
+        printf("Digite a nota das aulas praticas MAX 10:\n");
+        for(int i = 0; i < TAML_NOTAS; i++){
+            printf("Semana %d:\n", i+1);
+            scanf("%f", &a.notas[i]);
+        }
+        (*ptrl).alunos[0] = a;
+        (*ptrl).n++;
+        return 0;
+
+    }
+}
+
+int pequisarAluno(Lista *ptrl, int mat){
+    for(int i = 0; i < (*ptrl).n; i++){
+        if((*ptrl).alunos[i].mat == mat){
+            return i;
+        }
+    }
+}
+
+int reoverAluno(Lista* ptrl){
+    if(listaVazia(ptrl)){
+        printf("Lista vazia!\n");
+        return 1;
+    }else{
+        if((*ptrl).n > 0){
+            (*ptrl).n--;
+            printf("Aluno removido:\n");
+        }
+    }
+}
+
+int notaFinal(Lista* ptrl, int mat, Aluno a){
+    int pos = pequisarAluno(ptrl, mat);
+    if(pos == -1){
+        printf("Aluno nao cadastrado\n");
+    }else{
+        float soma = 0;
+        float media;
+        a = (*ptrl).alunos[pos];
+        for(int i = 0; i < TAML_NOTAS; i++){
+            soma+= a.notas[i];
+        }
+        media = soma/TAML_NOTAS;
+        printf("A nota fina do aluno %s  eh %.2f\n", a.nome, media);
+    }
+}
+
+int main(){
+
+    Lista *ptrl;
+    Aluno a;
+    int opcao, mat;
+    ptrl = malloc(sizeof(Lista));
+    do
+    {
+        printf("Escolha uma opcao:\n");
+        printf("1 - Inicializar Lista:\n");
+        printf("2 - Cadastrar auno:\n");
+        printf("3 - Pesquisar pela matricula:\n");
+        printf("4 - Remover aluno:\n");
+        printf("5 - Calcular/exibir a NF das praticas:\n");
+        printf ("0 - Para sair\n");
+        scanf("%d", &opcao);
+
+        switch (opcao)
+        {
+        case 1:
+            inicalizarLista(ptrl);
+            break;
+        case 2:
+            inserirAluno(ptrl, a);
+            break;
+        case 3:
+            printf("Digite a matricula do aluno:\n");
+            scanf("%d", &mat);
+            printf("%d", pequisarAluno(ptrl, mat));
+
+            break;
+        case 4:
+            reoverAluno(ptrl);
+            break;
+        case 5:
+            printf("Digite a matricula do aluno:\n");
+            scanf("%d", &mat);
+            notaFinal(ptrl, mat, a);
+            break;
+        case 0:
+            printf("Encerrando o programa...\n");
+            break;
+        default:
+            printf("Opcao invalida! Digite uma opcao valida\n");
+            break;
+        }
+    } while (opcao != 0);
+
+    free(ptrl);
+
+    return 0;
+}
+
+
+
