@@ -1,0 +1,156 @@
+Crie um programa em C que apresente o menu de opções abaixo, possibilitando ao usuário realizar as seguintes operações sobreuma lista duplamente encadeada
+formada usada para representaruma playlist de músicas (nome da música, duração da músicaemminutos):
+i. Inserir elemento no final da lista
+ii. Remover do final da lista
+iii. Exibir os elementos da lista
+iv. Contar o número de elementos na lista
+Obs1: todas as funções devem usar a notação de ponteiroparaponteiro, exceto as funções de exibir.
+
+#include<string.h>
+#include<stdio.h>
+#include<stdlib.h>
+
+typedef struct sMusica{
+    char nome[20];
+    int minutos;
+}Musica;
+
+typedef struct sNo{
+    Musica info;
+    struct sNo *dir;
+    struct sNo *esq;
+}No;
+
+No* alocarNo(){
+    No* aux;
+    aux = (No*)malloc(sizeof(No));
+    return aux;
+}
+
+void desalocarNo(No** plista){
+    free(plista);
+}
+
+No* inicializar(No** pplista){
+    *pplista = NULL;
+    return pplista;
+}
+
+int lista_vazia(No** pplista){
+    if(*pplista == NULL){
+        return 1;
+    }else
+        return 0;
+}
+
+void inserir_final(No** pplista, char nome[], int duracao){
+    No* Novo;
+    Novo = alocarNo();
+    if(Novo!=NULL){
+        strcpy(Novo->info.nome, nome);
+        Novo->info.minutos = duracao;
+        Novo->dir = NULL;
+        Novo->esq = NULL;
+        if(lista_vazia(pplista)){
+            *pplista = Novo;
+        }else{
+            No* aux;
+            aux = *pplista;
+            while(aux->dir != NULL){
+                aux = aux->dir;
+            }
+            aux->dir = Novo;
+            Novo->esq = aux;
+        }
+    }
+}
+
+void removor_final(No** pplista){
+    if(lista_vazia(pplista))
+        printf("Lista Vazia\n");
+    else{
+        if((**pplista).dir == NULL){
+            desalocarNo(pplista);
+        }else{
+            No* aux;
+            No* anterior = NULL;
+            aux = *pplista;
+            while(aux->dir!=NULL){
+                anterior = aux;
+                aux = aux->dir;
+            }
+            anterior->dir = NULL;
+            desalocarNo(aux);
+        }
+    }
+}
+
+void exibir_lista(No** pplista){
+    if(lista_vazia(pplista)){
+        printf("Lista Vazia\n");
+    }else{
+        No* aux;
+        aux = *pplista;
+        while(aux!=NULL){
+            printf("%s\n%d\n", aux->info.nome, aux->info.minutos);
+            aux = aux->dir;
+        }
+    }
+}
+
+void contar(No** pplista){
+    if(lista_vazia(pplista))
+        printf("Lista vazia\n");
+    else{
+        No* aux;
+        int cont=0;
+        aux = *pplista;
+        while(aux!=NULL){
+            cont++;
+            aux = aux->dir;
+        }
+        printf("Soma: %d\n\n", cont);
+    }
+}
+
+int main(){
+    No* plista;
+    int n, dur;
+    char nome_musica[20];
+    inicializar(&plista);
+    if(plista == NULL){
+       do{
+            printf("Escolha uma opcao:\n");
+            printf("1. Inserir elemento no final da lista\n");
+            printf("2. Remover elemento do final da lista\n");
+            printf("3. Exibir os elementos da lista\n");
+            printf("4. Contar o numero de elementos na lista\n");
+            printf("5. Sair\n");
+            scanf("%d", &n);
+            switch(n){
+            case 1:
+                fflush(stdin);
+                printf("Digite o nome da musica:\n");
+                gets(nome_musica);
+                printf("Digite a duracao desta musica:\n");
+                scanf("%d", &dur);
+                inserir_final(&plista, nome_musica, dur);
+                break;
+            case 2:
+                removor_final(&plista);
+                break;
+            case 3:
+                exibir_lista(&plista);
+                break;
+            case 4:
+                contar(&plista);
+                break;
+            case 5:
+                break;
+            default:
+                break;
+            }
+       }while(n!=5);
+    }
+    return 0;
+}
