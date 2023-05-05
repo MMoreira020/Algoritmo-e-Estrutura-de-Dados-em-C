@@ -1,0 +1,150 @@
+Crie um programa em C que apresente o menu de opções abaixo, possibilitando ao usuário realizar as seguintes operações sobreuma lista simplesmente encadeada formada por comprasdosupermercado (nome do produto e preço):
+I. Inserir elemento no início da lista
+II. Remover elemento do final da lista
+III. Contar os elementos da lista
+IV. Exibir os elementos da lista com preço maior que R$50,00.
+
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+typedef struct sCompras
+{
+    char produto[50];
+    float preco;
+
+}Compras;
+
+typedef struct sNo
+{
+    Compras info;
+    struct sNo *prox;    
+}No;
+
+No* inicializarNo(No* plista){
+    plista = NULL;
+    return plista;
+}
+
+No* alocarNo(){
+    No* aux;
+    aux = (No*)malloc(sizeof(No));
+    return aux;
+}
+
+int listaVazia(No* plista){
+    if(plista == NULL){
+        return 1;
+    }else{
+        return 0;
+    }
+}
+
+No* inserirNoInicio(No* plista, char elem[], float preco){
+    No* pNovo;
+    pNovo = alocarNo();
+    if(pNovo != NULL){
+        strcpy((*pNovo).info.produto, elem);
+        (*pNovo).info.preco = preco;
+        (*pNovo).prox = plista;
+        plista = pNovo;
+        return plista;
+    }else{
+        return plista;
+    }
+    
+}
+
+void removerFinal(No* plista){
+    if(plista == NULL){
+        printf("Lista vazia!\n");
+        return;
+    }
+    if((plista)->prox == NULL){
+        free(plista);
+        printf("Elemento removido.\n");
+        return;
+    }
+}
+
+int contarElementos(No* plista){
+    int cont = 0;
+    while (plista != NULL)
+    {
+        cont++;
+        plista = plista->prox;
+    }
+    return cont;
+    
+}
+
+void exibirElementosCOmMaiorPreco(No* plista){
+    printf("Produtos com o preco maior que R$ 50,00:\n");
+    while (plista != NULL)
+    {
+        if(plista->info.preco > 50){
+            printf("%s - R$%.2f\n", plista->info.produto, plista->info.preco);
+        }
+        plista = plista->prox;
+    }
+    
+}
+
+int main(){
+
+    No* plista = NULL;
+    int opcao;
+    char nome[50];
+    float preco;
+
+    do
+    {
+        printf("Escolha a opcao que deseja efetuar:\n");
+        printf("1 - Inicializar No:\n");
+        printf("2 - Insetir no inicio da lista:\n");
+        printf("3 - Remover elemento do final da lista:\n");
+        printf("4 - Contar elementos da lista:\n");
+        printf("5 - Exibir os elementos da lista com preco maior que R$ 50.00:\n");
+        printf("0 - Sair do programa:\n");
+        scanf("%d", &opcao);
+
+        switch (opcao)
+        {
+        case 1:
+            inicializarNo(plista);
+            break;
+        case 2:
+            fflush(stdin);
+            printf("Informe o produto que deseja inserir:\n");
+            gets(nome);
+            fflush(stdin);
+            printf("Informe o preco do produto:\n");
+            scanf("%f", &preco);
+            inserirNoInicio(plista, nome, preco);
+            break;
+        case 3:
+            removerFinal(plista);
+            break;
+        case 4:
+            printf("Numero de elemnentos na lista: %d\n", contarElementos(plista));
+            break;
+        case 5:
+            exibirElementosCOmMaiorPreco(plista);
+            break;
+        case 0:
+            printf("Saindo do programa.\n");
+            break;
+        default:
+            printf("Opcao Invalida!\n");
+            break;
+        }
+    } while (opcao != 0);
+    
+
+
+
+
+    return 0;
+}
+
