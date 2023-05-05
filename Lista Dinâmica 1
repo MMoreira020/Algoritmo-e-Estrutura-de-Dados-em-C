@@ -1,0 +1,145 @@
+Crie um programa emC que apresenteomenudeopções abaixo, possibilitando aousuáriorealizarasseguintes operações sobre umalistasimplesmenteencadeada formada por caracteres:
+i. Inserir elemento no final da lista
+ii. Remover elemento do início da listaiii.Imprimir todos os elementos da lista
+
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+typedef struct sCaracteres
+{
+    char caracteres;
+    struct scaracteres *prox;
+}Caracteres;
+
+Caracteres* inicializarLista(Caracteres* plista){
+    plista = NULL;
+    return plista;
+}
+
+Caracteres* alocarNo(){
+    Caracteres* pnovoNo = (Caracteres*)malloc(sizeof(Caracteres));
+    if(pnovoNo != NULL){
+        return pnovoNo;
+    }else{
+        printf("Nao foi possivel alocar o No!\n");
+        return 0;
+    }
+}
+
+Caracteres* desalocarNo(Caracteres* plista){
+    free(plista);
+}
+
+Caracteres* listaVazia(Caracteres* plista){
+    if(plista == NULL){
+        return 1;
+    }else{
+        return 0;
+    }
+}
+
+Caracteres* inserirNoFinal(Caracteres* plista, char caracteres){
+    Caracteres* pNovo;
+    pNovo = alocarNo();
+
+    if(pNovo != NULL){
+        pNovo->caracteres = caracteres;
+        pNovo->prox = NULL;
+
+        if(listaVazia(plista)){
+            plista = pNovo;
+            return plista;
+        }else{
+            Caracteres* aux;
+            aux = plista;
+            while (aux->prox != NULL)
+            {
+                aux = aux->prox;
+            }
+            aux->prox = pNovo;
+            return plista;
+            
+        }
+    }else{
+        printf("Nao foi possivel inserir!\n");
+    }
+}
+
+Caracteres* removerInicio(Caracteres* plista){
+    if (listaVazia(plista))
+    {
+        printf("Erro - Lista vazia");
+        return plista;
+    }else{
+        Caracteres* aux;
+        aux = plista->prox;
+        desalocarNo(plista);
+        plista = aux;
+        free(aux);
+        return plista;
+    }
+    
+}
+
+int imprimirLista(Caracteres* plista){
+    if(plista == NULL){
+        printf("Lista vazia!\n");
+        return 1;
+    }else{
+        printf("Estes sao os elementos da lista:\n");
+        Caracteres* aux = plista;
+        while (aux != NULL)
+        {
+            printf("%c\n", aux->caracteres);
+            aux = aux->prox;
+        }
+        
+    }
+    return 0;
+}
+
+
+int main(){
+
+    Caracteres* plista = NULL;
+    int opcao;
+    char caracteres;
+    inicializarLista(plista);
+    
+    do{
+        printf("Informe uma opcao:\n");
+        printf("1 - Inserir elemento no final da lista:\n");
+        printf("2 - Remover elemento do inicio da lista:\n");
+        printf("3 - Imprimir todos os elementos da lista:\n");
+        printf("4 - Sair!\n");
+        scanf("%d", &opcao);
+
+        switch (opcao)
+        {
+        case 1:
+            printf("Informe o elemento a ser iserido:\n");
+            getchar();
+            scanf("%c", &caracteres);
+            plista = inserirNoFinal(plista, caracteres);
+            break;
+        case 2:
+            plista = removerInicio(plista);
+            break;
+        case 3:
+            imprimirLista(plista);
+            break;
+        case 4:
+            printf("Programa encerrado.\n");
+            exit(0);
+            break;
+        default:
+            printf("Digite ua opcao valida!\n");
+            break;
+        }
+    }while(opcao != 4);
+
+
+    return 0;
+}
