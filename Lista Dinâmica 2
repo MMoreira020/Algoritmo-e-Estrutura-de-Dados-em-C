@@ -1,0 +1,150 @@
+Crie um programa em C que apresente ummenuaoprofessore permita fazer as seguintes operações sobreumalistalineardinâmica para cadastrar os dados das disciplinasqueeleiráministrar no período. As informações a seremcadastradassão:código da disciplina, nome da disciplina, saladoPVA.
+i. Inserir uma nova disciplina no início da lista dinâmicaii. Remover disciplina pelo código (ex.: SIN110)
+iii. Exibir somente as disciplinas que serãoministradasnolaboratório de informática - PVA 227.
+
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+typedef struct sDadosDisciplina
+{
+    char codigo[7];
+    char nomeDisciplina[15];
+    int salaPVa;
+    struct sNo *prox;
+}No;
+
+No* inicializarNo(No* plista){
+    plista = NULL;
+    return plista;
+}
+
+No* alocarNo(){
+    No* pNovoNo = (No*)malloc(sizeof(No));
+    if(pNovoNo != NULL){
+        return pNovoNo;
+    }else{
+        printf ("Nao foi possivel alocar memoria:\n");
+        return 0;
+    }
+   
+}
+
+void DesalocarNo(No* plista){
+    free(plista);
+}
+
+int listaVazia(No* plista){
+    if(plista == NULL){
+        return 1;
+    }else{
+        return 0;
+    }
+}
+
+No* inserirDisciplina(No* plista){
+    No* pNovo;
+    pNovo = alocarNo();
+    
+    if(pNovo != NULL){
+    fflush(stdin);
+    printf("Informe o codigo da disciplina:\n");
+    gets(pNovo->codigo);
+    fflush(stdin);
+    printf("Informe o nome da disciplina:\n");
+    gets(pNovo->nomeDisciplina);
+    fflush(stdin);
+    printf("Informe a sala da Disciplin:\n");
+    scanf("%d", &(pNovo->salaPVa));
+    pNovo->prox = plista;
+    plista = pNovo;
+    printf("Foi possivel inserir a disciplina!\n");
+    return plista;
+    }else{
+        printf("Nao foi possivel inserir a disciplina!\n");
+        return plista;
+    }
+}
+
+No* removerDisciplina(No** plista, char *codigo){
+    No* aux = plista;
+    No* anterior = NULL;
+
+    if(aux != NULL){
+        if(strcmp(aux->codigo, codigo) == 0){
+            if(anterior = NULL){
+                plista = aux->prox;
+            }else{
+                anterior->prox = aux->prox;
+            }
+            printf("Foi possivel remover a disciplina.\n");
+            return aux;
+            
+        }
+        anterior = aux;
+        aux = aux->prox;
+    }
+    printf("Nao foi encontada a disciplina\n");
+}
+
+void exibirDisciplina(No* plista){
+    printf("Exibir somente disciplinas ministradas no Lab de Informatica - PVA 227\n");
+    No* aux = plista;
+
+    while(aux != NULL){
+        if((aux->salaPVa == 227)){
+            printf("Codigo da disciplina: %s\n", aux->codigo);
+            printf("Nome da discilina: %s\n", aux->nomeDisciplina);
+            printf("Sala da Disciplina: %d\n", aux->salaPVa);
+        }
+        aux = aux->prox;
+
+    }
+}
+
+
+int main(){
+
+    No* plista;
+    int opcao;
+    int n;
+    char codigo[15];
+
+
+    plista = inicializarNo(plista);
+
+    do{
+        printf("---- Este eh o menu do professor, o que deseja fazer ? ----\n");
+        printf("I - Inserir disciplina:\n");
+        printf("II - Remover disciplina:\n");
+        printf("III - Mostrar disciplinas na sala PVA 227:\n");
+        printf("IV - Sair:\n");
+        printf("Escolha uma opcao:\n");
+        scanf("%d", &opcao);
+
+        switch (opcao){
+        case 1:
+            plista = inserirDisciplina(plista);
+            break;
+        case 2:
+            printf("Informe o codigo da disciplina que deseja remover:\n");
+            scanf("%s", codigo);
+            removerDisciplina(&plista, codigo);
+            break;
+        case 3:
+            exibirDisciplina(plista);
+            break;  
+        case 4:
+            printf("Sair do menu:\n");
+            return 0;     
+        default:
+            printf("Opcao invalida! Digite uma opcao valida:\n");
+            break;
+        }
+    }while(opcao != 4);
+    
+    DesalocarNo(plista);
+
+    return 0;
+}
