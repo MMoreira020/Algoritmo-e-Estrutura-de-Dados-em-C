@@ -1,0 +1,224 @@
+Desenvolva uma função na linguagem C para contar o númerodeelementos de uma lista simplesmente encadeada formadaporlivros de leitura (nome do livro e número de páginas). 
+Façaduasversões: uma iterativa e uma recursiva.
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+typedef struct sLivros
+{
+    char nome[20];
+    int num_pag;
+}Livros;
+
+typedef struct sNo
+{
+    Livros livro;
+    struct sNo *prox;
+}No;
+
+No* inicializarNo(No* plista){
+    plista = NULL;
+    return plista;
+}
+
+int listaVazia(No* plista){
+    if(plista == NULL){
+        printf("Lista vazia!\n");
+        return 1;
+    }else{
+        return 0;
+    }
+}
+
+No* alocarNO(){
+    No* aux;
+    aux = (No*)malloc(sizeof(No));
+    return aux;
+}
+
+No* inserirLivro(No* plista, char nome[], int num_pag){
+    No* pNovo;
+    pNovo = alocarNO();
+    if(pNovo != NULL){
+        strcpy((pNovo->livro.nome), nome);
+        (*pNovo).livro.num_pag = num_pag;
+        (*pNovo).prox = plista;
+        plista = pNovo;
+        }else{
+        return NULL;
+    }
+}
+
+int contarLivros(No* plista){
+    int cont = 0;
+    No* aux = plista;
+    while(aux != NULL)
+    {
+        cont++;
+        aux = aux->prox;
+    }
+    return cont;   
+}
+
+
+int main(){
+
+    No* plista = NULL;
+    plista = inicializarNo(plista);
+
+    char nome[20];
+    int num_pag, num_livros;
+    int opcao;
+
+    printf("Digite a quantidade de livros que deseja inserir ?\n");
+    scanf("%d", &num_livros);
+    do
+    {
+        
+        printf("Escolha uma opcao:\n");
+        printf("1 - Inserir um livro:\n");
+        printf("2 - Contar o numero de livros\n");
+        printf("3 - Para sair:\n");
+        scanf("%d", &opcao);
+
+        switch (opcao)
+        {
+        case 1:
+            for(int i = 0; i < num_livros; i++){
+            fflush(stdin);
+            printf("Digite o nome do livro:\n", i+1);
+            gets(nome);
+            fflush(stdin);
+            printf("Digite o numero de paginas do livro:\n", i+1);
+            scanf("%d", &num_pag);
+            plista = inserirLivro(plista, nome, num_pag);
+            }
+            break;
+        case 2:
+            printf("Numero de livros inseridos %d\n", contarLivros(plista));
+            break;
+        case 3:
+            printf("Saindo...\n");
+            break;
+        default:
+            printf("Opcao invalida!\n");
+            break;
+        
+        }
+    } while (opcao != 0);
+    
+    free(plista);
+
+    return 0;
+}
+
+FORMA RECURSIVA!!!
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+typedef struct sLivros
+{
+    char nome[20];
+    int num_pag;
+}Livros;
+
+typedef struct sNo{
+    Livros livro;
+    struct sNo *prox;
+}No;
+
+No* inicializarLista(No* plista){
+    plista = NULL;
+    return plista;
+}
+
+int listaVazia(No* plista){
+    if(plista == NULL){
+        printf("Lista vazia!\n");
+        return 1;
+    }else{
+        return 0;
+    }
+}
+
+No* alocarNo(){
+    No* aux;
+    aux = (No*)malloc(sizeof(No));
+    return aux;
+}
+
+No* inserirLivro(No* plista, char nome[], float num_pag){
+    No* pNovo;
+    pNovo = alocarNo();
+
+    if(pNovo != NULL){
+        strcpy((*pNovo).livro.nome, nome);
+        (*pNovo).livro.num_pag = num_pag;
+        (*pNovo).prox = plista;
+        plista = pNovo;
+        return plista;
+    }else{
+        return NULL;
+    }
+}
+
+int contarivros(No* plista){
+    if(plista == NULL){
+        return 0;   
+    }else{
+        return 1 + contarivros(plista->prox);
+    }
+}
+
+
+int main(){
+
+    No* plista = NULL;
+    char nome[20];
+    int num_pag, num_livros;
+    int opcao;
+
+    printf("Informe a qtd de livros que deseja inserir:\n");
+    scanf("%d", &num_livros);
+
+    do
+    {
+        printf("Informe uma opcao:\n");
+        printf("1 - Inicializar lista:\n");
+        printf("2 - Inserir um livro:\n");
+        printf("3 - Contar o numero de livros:\n");
+        printf("4 - Sair:\n");
+        scanf("%d", &opcao);
+
+        switch (opcao)
+        {
+        case 1:
+            plista = inicializarLista(plista);
+            break;
+        case 2:
+            for(int i = 0; i < num_livros; i++){
+            fflush(stdin);
+            printf("Informe o nome do livro:\n");
+            gets(nome);
+            fflush(stdin);
+            printf("Informe o numero de paginas do livro:\n");
+            scanf("%d", &num_pag);
+            plista = inserirLivro(plista, nome, num_pag);
+        }
+        break;
+        case 3:
+            printf("Numero de livros inseridos %d\n", contarivros(plista));
+            break;
+        default:
+            printf("Opcao Invalida!\n");
+            break;
+        }
+    } while (opcao != 0);
+    
+
+
+    return 0;
+}
